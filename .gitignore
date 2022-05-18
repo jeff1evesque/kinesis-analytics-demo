@@ -1,0 +1,10 @@
+##
+## ignore files
+##
+/**/*.swp
+/**/*.save
+/**/.DS_Store
+/**/.bash_history
+/**/.idea
+/**/application_properties.json
+/**/*.jar
