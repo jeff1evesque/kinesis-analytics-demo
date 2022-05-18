@@ -1,0 +1,28 @@
+[
+    {
+        "PropertyGroupId": "kinesis.analytics.flink.run.options",
+        "PropertyMap": {
+            "python": "sliding-windows.py",
+            "jarfile": "flink-sql-connector-kinesis_2.12-1.13.2.jar"
+        }
+    }, {
+        "PropertyGroupId": "consumer.config.0",
+        "PropertyMap": {
+            "input.stream.name": "KinesisAnalyticsPenTestInputStream",
+            "flink.stream.initpos": "LATEST",
+            "aws.region": "us-east-1",
+            "flink.sliding_window.over": "8.hours",
+            "flink.sliding_window.every": "1.minutes",
+            "flink.sliding_window.on": "utc",
+            "flink.sliding_window.alias": "eight_hour_window",
+            "json.timestamp_format_standard": "SQL"
+        }
+    }, {
+        "PropertyGroupId": "producer.config.0",
+        "PropertyMap": {
+            "output.stream.name": "KinesisAnalyticsPenTestOutputStream",
+            "shard.count": "1",
+            "aws.region": "us-east-1"
+        }
+    }
+]
