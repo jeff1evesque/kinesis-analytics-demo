@@ -160,7 +160,7 @@ def perform_sliding_window_aggregation(
             .alias(sliding_window_alias)
         )
         .group_by('ticker, {}'.format(sliding_window_alias))
-        .select('ticker, price.min as p, {}.end as t'.format(
+        .select('ticker, price.min as price, {}.end as {}'.format(
             sliding_window_alias,
             sliding_window_on
         ))
