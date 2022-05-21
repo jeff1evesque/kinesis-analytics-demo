@@ -118,7 +118,7 @@ def create_table(
     )""".format(table_name, stream_name, region, stream_initpos, timestamp_format_standard)
 
 
-def create_print_table(table_name):
+def create_print_table(table_name, connector='print'):
     '''
 
     print connector for sink
@@ -134,8 +134,8 @@ def create_print_table(table_name):
         utc TIMESTAMP(3),
         WATERMARK FOR utc AS utc - INTERVAL '20' SECOND
     ) WITH (
-        'connector' = 'print'
-    )""".format(table_name)
+        'connector' = '{1}'
+    )""".format(table_name, connector)
 
 
 def perform_sliding_window_aggregation(
@@ -217,6 +217,11 @@ def main():
     if is_local:
         table_env.execute_sql(
             create_print_table(output_table_name)
+        )
+
+    else:
+        table_env.execute_sql(
+            create_print_table(output_table_name, connector='blackhole')
         )
 
     #
