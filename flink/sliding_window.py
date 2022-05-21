@@ -211,8 +211,8 @@ def main():
     #
     # 3. Creates a sink table writing to a Kinesis Data Stream
     #
-    # Note: and appropriate 'create_table' invocation needs to be supplied
-    #       below if a kinesis stream sink is desired
+    # Note: 'create_table' invocation must replace below 'create_print_table'
+    #       if an actual sink (i.e. kinesis stream) is desired
     #
     if is_local:
         table_env.execute_sql(
