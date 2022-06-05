@@ -118,7 +118,7 @@ def create_table(
     )""".format(table_name, stream_name, region, stream_initpos, timestamp_format_standard)
 
 
-def create_print_table(table_name, connector='print'):
+def create_print_table(table_name):
     '''
 
     print connector for sink
@@ -134,8 +134,8 @@ def create_print_table(table_name, connector='print'):
         utc TIMESTAMP(3),
         WATERMARK FOR utc AS utc - INTERVAL '20' SECOND
     ) WITH (
-        'connector' = '{1}'
-    )""".format(table_name, connector)
+        'connector' = 'print'
+    )""".format(table_name)
 
 
 def perform_sliding_window_aggregation(
@@ -160,7 +160,7 @@ def perform_sliding_window_aggregation(
             .alias(sliding_window_alias)
         )
         .group_by('ticker, {}'.format(sliding_window_alias))
-        .select('ticker, price.min as price, {}.end as {}'.format(
+        .select('ticker, price.min as p, {}.end as t'.format(
             sliding_window_alias,
             sliding_window_on
         ))
@@ -211,17 +211,12 @@ def main():
     #
     # 3. Creates a sink table writing to a Kinesis Data Stream
     #
-    # Note: 'create_table' invocation must replace below 'create_print_table'
-    #       if an actual sink (i.e. kinesis stream) is desired
+    # Note: and appropriate 'create_table' invocation needs to be supplied
+    #       below if a kinesis stream sink is desired
     #
     if is_local:
         table_env.execute_sql(
             create_print_table(output_table_name)
-        )
-
-    else:
-        table_env.execute_sql(
-            create_print_table(output_table_name, connector='blackhole')
         )
 
     #
