@@ -93,4 +93,67 @@
 
    After a few seconds of sending data, you should see the print statements come through the console of the IDE in the `sliding_window` tab.
 
-   ![](img/2021-03-22-09-42-08.png)
+
+      ```bash
+      /Users/jeff1evesque/opt/miniconda3/envs/kinesis-analytics/bin/python /Users/jeff1evesque/application/kinesis-analytics/flink/sliding_window.py
+      is_local: True
+
+      Source Schema
+      (
+        `ticker` VARCHAR(6),
+        `price` DOUBLE,
+        `utc` TIMESTAMP(3) *ROWTIME*,
+        WATERMARK FOR `utc`: TIMESTAMP(3) AS `utc` - INTERVAL '20' SECOND
+      )
+
+      Sink Schema
+      (
+        `ticker` VARCHAR(6),
+        `price` DOUBLE,
+        `utc` TIMESTAMP(3) *ROWTIME*,
+        WATERMARK FOR `utc`: TIMESTAMP(3) AS `utc` - INTERVAL '20' SECOND
+      )
+      sliding_window_over: 2.minutes
+      sliding_window_every: 1.minutes
+      sliding_window_on: utc
+
+      sliding_window_table
+      (
+        `ticker` VARCHAR(6),
+        `price` DOUBLE,
+        `utc` TIMESTAMP(3)
+      )
+
+      creating temporary view for sliding window table to access within SQL
+      WARNING: An illegal reflective access operation has occurred
+      WARNING: Illegal reflective access by org.apache.flink.api.java.ClosureCleaner (file:/Users/jeff1evesque/opt/miniconda3/envs/kinesis-analytics/lib/python3.8/site-packages/pyflink/lib/flink-dist_2.11-1.13.2.jar) to field java.util.Collections$SingletonList.serialVersionUID
+      WARNING: Please consider reporting this to the maintainers of org.apache.flink.api.java.ClosureCleaner
+      WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+      WARNING: All illegal access operations will be denied in a future release
+      +I[AMZN, 0.75, 2022-06-06T19:30]
+      +I[TSLA, 0.59, 2022-06-06T19:30]
+      +I[AAPL, 0.52, 2022-06-06T19:30]
+      +I[MSFT, 0.26, 2022-06-06T19:30]
+      +I[AMZN, 0.26, 2022-06-06T19:31]
+      +I[MSFT, 0.26, 2022-06-06T19:31]
+      +I[TSLA, 0.26, 2022-06-06T19:31]
+      +I[AAPL, 0.01, 2022-06-06T19:31]
+      +I[AMZN, 0.11, 2022-06-06T19:32]
+      +I[MSFT, 0.17, 2022-06-06T19:32]
+      +I[AAPL, 0.01, 2022-06-06T19:32]
+      +I[TSLA, 0.03, 2022-06-06T19:32]
+      +I[TSLA, 0.03, 2022-06-06T19:33]
+      +I[AAPL, 0.06, 2022-06-06T19:33]
+      +I[AMZN, 0.02, 2022-06-06T19:33]
+      +I[MSFT, 0.16, 2022-06-06T19:33]
+      +I[AAPL, 0.06, 2022-06-06T19:34]
+      +I[MSFT, 0.01, 2022-06-06T19:34]
+      +I[TSLA, 0.03, 2022-06-06T19:34]
+      +I[AMZN, 0.02, 2022-06-06T19:34]
+      +I[MSFT, 0.01, 2022-06-06T19:35]
+      +I[AAPL, 0.18, 2022-06-06T19:35]
+      +I[TSLA, 0.03, 2022-06-06T19:35]
+      +I[AMZN, 0.03, 2022-06-06T19:35]
+      ```
+
+2021-03-22-09-42-08.png

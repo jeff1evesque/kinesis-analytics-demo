@@ -63,6 +63,10 @@ if is_local:
         'pipeline.jars',
         'file://{}/flink-sql-connector-kinesis_2.12-1.13.2.jar'.format(CURRENT_DIR),
     )
+    table_env.get_config().get_configuration().set_string(
+        'parallelism.default',
+        '1'
+    )
 
 
 def get_application_properties():
