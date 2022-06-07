@@ -48,6 +48,19 @@ table_env = StreamTableEnvironment.create(environment_settings=env_settings)
 APPLICATION_PROPERTIES_FILE_PATH = '/etc/flink/application_properties.json' # on kda
 
 #
+# When running PyFlink with more parallelism than available kinesis data stream
+# shards, some consumer instances could idle, preventing watermarks in the event
+# time processing application to advance. Workarounds include setting the same
+# number of parallelism as shards, or defining 'Shard Idle Interval Milliseconds'
+#
+# https://github.com/aws-samples/pyflink-getting-started/issues/1#issuecomment-1148647011
+#
+table_env.get_config().get_configuration().set_string(
+    'parallelism.default',
+    '1'
+)
+
+#
 # set env var for local environment
 #
 is_local = (True if os.environ.get('IS_LOCAL') else False)
@@ -62,10 +75,6 @@ if is_local:
     table_env.get_config().get_configuration().set_string(
         'pipeline.jars',
         'file://{}/flink-sql-connector-kinesis_2.12-1.13.2.jar'.format(CURRENT_DIR),
-    )
-    table_env.get_config().get_configuration().set_string(
-        'parallelism.default',
-        '1'
     )
 
 
