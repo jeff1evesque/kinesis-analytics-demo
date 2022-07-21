@@ -6,7 +6,7 @@ This module:
     1. Creates a table environment
     2. Creates a source table from a Kinesis Data Stream
     3. Creates a sink table writing to a Kinesis Data Stream
-    4. Queries from the Source Table and creates a tumbling window over 1
+    4. Queries from the Source Table and creates a sliding window over 1
        minute to calculate the minimum value over the window.
     5. (REMOVED) These sliding window results are inserted into the Sink table.
 
