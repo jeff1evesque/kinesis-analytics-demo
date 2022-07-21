@@ -1,6 +1,6 @@
 # Getting Started
 
-1. Install PyCharm
+### Install PyCharm
    1. First, [install miniconda](https://docs.conda.io/en/latest/miniconda.html) for Python 3.8
    2. Then, create and activate a `kinesis_analytics` environment:
 
@@ -13,13 +13,13 @@
    4. Select your operating system and download it, then run the executable to install.
    5. Open Pycharm
 
-2. Set up Pycharm with Conda
+### Set up Pycharm with Conda
    1. Clone this GitHub repository locally
    2. When you first open up the IDE, select `New Project`, then set the `Location` to the local path of the git repository
 
    ![Pycharm New Project](img/2021-03-19-15-53-24.png)
 
-3. Set up AWS Resources for local development
+### Set up AWS Resources for local development
    1. Go into your AWS account and create an input Kinesis Data Stream and an Output Kinesis Data Stream--they can be one shard each, this is fine!
 
    ![](img/2021-03-22-08-34-05.png)
@@ -50,7 +50,7 @@
 
    **Note:** for best practices, the above permission should not be permanently added.
 
-4. Setup local environment
+### Setup local environment
    1. Copy [`flink/application_properties.json.replace`](https://github.com/jeff1evesque/kinesis-analytics-demo/blob/master/flink/application_properties.json.replace) as `flink/application_properties.json`, change the `input.stream.name` to be the input kinesis stream name, and optionally remove the producer configuration in the same file, then Hit save.
 
    2. Next, click [`flink/sliding_window.py`](https://github.com/jeff1evesque/kinesis-analytics-demo/blob/master/flink/sliding_window.py), then right click within the code and click `Modify Run Configuration`.
@@ -80,7 +80,7 @@
 
    ![](img/2021-03-22-09-12-14.png)
 
-5. Run the Sliding Window example.
+### Run the Sliding Window example.
 
     ![](img/2021-03-22-08-37-07.png)
 
@@ -156,7 +156,7 @@
       +I[AMZN, 0.03, 2022-06-06T19:35]
       ```
 
-5. Run the Tumbling Window example.
+### Run the Tumbling Window example.
 
    1. Now, right click into the code (i.e. [`tumbling_window.py`](https://github.com/jeff1evesque/kinesis-analytics-demo/blob/master/flink/tumbling_window.py)) and hit `Run 'tumbling_window'` to start the code execution.
 
