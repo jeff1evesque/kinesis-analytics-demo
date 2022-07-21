@@ -1,6 +1,6 @@
 """
 
-tumbling_windows.py
+tumbling_window.py
 ~~~~~~~~~~~~~~~~~~~
 This module:
     1. Creates a table environment
