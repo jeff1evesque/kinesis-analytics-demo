@@ -80,81 +80,78 @@
 
    ![](img/2021-03-22-09-12-14.png)
 
-### Run the Sliding Window example.
-
-    ![](img/2021-03-22-08-37-07.png)
-
+### Run the Sliding Window example
    1. To implement Kinesis (source) to Kinesis (sink), replace `create_print_table` invocation from the `main` function with `create_table`. For local development, no further changes are required.
 
    ![](img/2021-03-22-09-24-36.png)
 
-   2. Now, right click into the code (i.e. (i.e. [`sliding_window.py`](https://github.com/jeff1evesque/kinesis-analytics-demo/blob/master/flink/sliding_window.py))) and hit `Run 'sliding_window'` to start the code execution.
+   2. Now, right click into the code (i.e. [`sliding_window.py`](https://github.com/jeff1evesque/kinesis-analytics-demo/blob/master/flink/sliding_window.py)) and hit `Run 'sliding_window'` to start the code execution.
 
    3. Finally, send data to the source Kinesis Data Stream. A sample [`datagen/stock.py`](https://github.com/jeff1evesque/kinesis-analytics-demo/blob/master/datagen/stock.py) has been provided in this project, and needs to be executed.
 
    After a few seconds of sending data, you should see the print statements come through the console of the IDE in the `sliding_window` tab.
 
-      ```bash
-      /Users/jeff1evesque/opt/miniconda3/envs/kinesis-analytics-demo/bin/python /Users/jeff1evesque/application/kinesis-analytics-demo/flink/sliding_window.py
-      is_local: True
+   ```bash
+   /Users/jeff1evesque/opt/miniconda3/envs/kinesis-analytics-demo/bin/python /Users/jeff1evesque/application/kinesis-analytics-demo/flink/sliding_window.py
+   is_local: True
 
-      Source Schema
-      (
-        `ticker` VARCHAR(6),
-        `price` DOUBLE,
-        `utc` TIMESTAMP(3) *ROWTIME*,
-        WATERMARK FOR `utc`: TIMESTAMP(3) AS `utc` - INTERVAL '20' SECOND
-      )
+   Source Schema
+   (
+     `ticker` VARCHAR(6),
+     `price` DOUBLE,
+     `utc` TIMESTAMP(3) *ROWTIME*,
+     WATERMARK FOR `utc`: TIMESTAMP(3) AS `utc` - INTERVAL '20' SECOND
+   )
 
-      Sink Schema
-      (
-        `ticker` VARCHAR(6),
-        `price` DOUBLE,
-        `utc` TIMESTAMP(3) *ROWTIME*,
-        WATERMARK FOR `utc`: TIMESTAMP(3) AS `utc` - INTERVAL '20' SECOND
-      )
-      sliding_window_over: 2.minutes
-      sliding_window_every: 1.minutes
-      sliding_window_on: utc
+   Sink Schema
+   (
+     `ticker` VARCHAR(6),
+     `price` DOUBLE,
+     `utc` TIMESTAMP(3) *ROWTIME*,
+     WATERMARK FOR `utc`: TIMESTAMP(3) AS `utc` - INTERVAL '20' SECOND
+   )
+   sliding_window_over: 2.minutes
+   sliding_window_every: 1.minutes
+   sliding_window_on: utc
 
-      sliding_window_table
-      (
-        `ticker` VARCHAR(6),
-        `price` DOUBLE,
-        `utc` TIMESTAMP(3)
-      )
+   sliding_window_table
+   (
+     `ticker` VARCHAR(6),
+     `price` DOUBLE,
+     `utc` TIMESTAMP(3)
+   )
 
-      creating temporary view for sliding window table to access within SQL
-      WARNING: An illegal reflective access operation has occurred
-      WARNING: Illegal reflective access by org.apache.flink.api.java.ClosureCleaner (file:/Users/jeff1evesque/opt/miniconda3/envs/kinesis-analytics-demo/lib/python3.8/site-packages/pyflink/lib/flink-dist_2.11-1.13.2.jar) to field java.util.Collections$SingletonList.serialVersionUID
-      WARNING: Please consider reporting this to the maintainers of org.apache.flink.api.java.ClosureCleaner
-      WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
-      WARNING: All illegal access operations will be denied in a future release
-      +I[AMZN, 0.75, 2022-06-06T19:30]
-      +I[TSLA, 0.59, 2022-06-06T19:30]
-      +I[AAPL, 0.52, 2022-06-06T19:30]
-      +I[MSFT, 0.26, 2022-06-06T19:30]
-      +I[AMZN, 0.26, 2022-06-06T19:31]
-      +I[MSFT, 0.26, 2022-06-06T19:31]
-      +I[TSLA, 0.26, 2022-06-06T19:31]
-      +I[AAPL, 0.01, 2022-06-06T19:31]
-      +I[AMZN, 0.11, 2022-06-06T19:32]
-      +I[MSFT, 0.17, 2022-06-06T19:32]
-      +I[AAPL, 0.01, 2022-06-06T19:32]
-      +I[TSLA, 0.03, 2022-06-06T19:32]
-      +I[TSLA, 0.03, 2022-06-06T19:33]
-      +I[AAPL, 0.06, 2022-06-06T19:33]
-      +I[AMZN, 0.02, 2022-06-06T19:33]
-      +I[MSFT, 0.16, 2022-06-06T19:33]
-      +I[AAPL, 0.06, 2022-06-06T19:34]
-      +I[MSFT, 0.01, 2022-06-06T19:34]
-      +I[TSLA, 0.03, 2022-06-06T19:34]
-      +I[AMZN, 0.02, 2022-06-06T19:34]
-      +I[MSFT, 0.01, 2022-06-06T19:35]
-      +I[AAPL, 0.18, 2022-06-06T19:35]
-      +I[TSLA, 0.03, 2022-06-06T19:35]
-      +I[AMZN, 0.03, 2022-06-06T19:35]
-      ```
+   creating temporary view for sliding window table to access within SQL
+   WARNING: An illegal reflective access operation has occurred
+   WARNING: Illegal reflective access by org.apache.flink.api.java.ClosureCleaner (file:/Users/jeff1evesque/opt/miniconda3/envs/kinesis-analytics-demo/lib/python3.8/site-packages/pyflink/lib/flink-dist_2.11-1.13.2.jar) to field java.util.Collections$SingletonList.serialVersionUID
+   WARNING: Please consider reporting this to the maintainers of org.apache.flink.api.java.ClosureCleaner
+   WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+   WARNING: All illegal access operations will be denied in a future release
+   +I[AMZN, 0.75, 2022-06-06T19:30]
+   +I[TSLA, 0.59, 2022-06-06T19:30]
+   +I[AAPL, 0.52, 2022-06-06T19:30]
+   +I[MSFT, 0.26, 2022-06-06T19:30]
+   +I[AMZN, 0.26, 2022-06-06T19:31]
+   +I[MSFT, 0.26, 2022-06-06T19:31]
+   +I[TSLA, 0.26, 2022-06-06T19:31]
+   +I[AAPL, 0.01, 2022-06-06T19:31]
+   +I[AMZN, 0.11, 2022-06-06T19:32]
+   +I[MSFT, 0.17, 2022-06-06T19:32]
+   +I[AAPL, 0.01, 2022-06-06T19:32]
+   +I[TSLA, 0.03, 2022-06-06T19:32]
+   +I[TSLA, 0.03, 2022-06-06T19:33]
+   +I[AAPL, 0.06, 2022-06-06T19:33]
+   +I[AMZN, 0.02, 2022-06-06T19:33]
+   +I[MSFT, 0.16, 2022-06-06T19:33]
+   +I[AAPL, 0.06, 2022-06-06T19:34]
+   +I[MSFT, 0.01, 2022-06-06T19:34]
+   +I[TSLA, 0.03, 2022-06-06T19:34]
+   +I[AMZN, 0.02, 2022-06-06T19:34]
+   +I[MSFT, 0.01, 2022-06-06T19:35]
+   +I[AAPL, 0.18, 2022-06-06T19:35]
+   +I[TSLA, 0.03, 2022-06-06T19:35]
+   +I[AMZN, 0.03, 2022-06-06T19:35]
+   ```
 
 ### Run the Tumbling Window example.
 
@@ -162,60 +159,60 @@
 
     2. Finally, send data to the source Kinesis Data Stream. A sample [`datagen/stock.py`](https://github.com/jeff1evesque/kinesis-analytics-demo/blob/master/datagen/stock.py) has been provided in this project, and needs to be executed.
 
-    After a few seconds of sending data, you should see the print statements come through the console of the IDE in the `sliding_window` tab.
+    After a few seconds of sending data, you should see the print statements come through the console of the IDE in the `tumbling_window` tab.
 
     ```bash
     /Users/jeff1evesque/opt/miniconda3/envs/kinesis-analytics-demo/bin/python /Users/jeff1evesque/application/kinesis-analytics-demo/flink/sliding_window.py
     is_local: True
 
-        Source Schema
-        (
-          `ticker` VARCHAR(6),
-          `price` DOUBLE,
-          `utc` TIMESTAMP(3) *ROWTIME*,
-          WATERMARK FOR `utc`: TIMESTAMP(3) AS `utc` - INTERVAL '20' SECOND
-        )
+    Source Schema
+    (
+      `ticker` VARCHAR(6),
+      `price` DOUBLE,
+      `utc` TIMESTAMP(3) *ROWTIME*,
+      WATERMARK FOR `utc`: TIMESTAMP(3) AS `utc` - INTERVAL '20' SECOND
+    )
 
-        Sink Schema
-        (
-          `ticker` VARCHAR(6),
-          `window_start` TIMESTAMP(3),
-          `window_end` TIMESTAMP(3),
-          `first_price` DOUBLE,
-          `last_price` DOUBLE,
-          `min_price` DOUBLE,
-          `max_price` DOUBLE
-        )
-        sliding_window_over: '8' HOURS
-        sliding_window_every: '1' MINUTE
-        sliding_window_on: utc
+    Sink Schema
+    (
+      `ticker` VARCHAR(6),
+      `window_start` TIMESTAMP(3),
+      `window_end` TIMESTAMP(3),
+      `first_price` DOUBLE,
+      `last_price` DOUBLE,
+      `min_price` DOUBLE,
+      `max_price` DOUBLE
+    )
+    sliding_window_over: '8' HOURS
+    sliding_window_every: '1' MINUTE
+    sliding_window_on: utc
 
-        sliding_window_table
-        (
-          `ticker` VARCHAR(6),
-          `window_start` TIMESTAMP(3) *ROWTIME*,
-          `window_end` TIMESTAMP(3) *ROWTIME*,
-          `first_price` DOUBLE,
-          `last_price` DOUBLE,
-          `min_price` DOUBLE,
-          `max_price` DOUBLE
-        )
+    sliding_window_table
+    (
+      `ticker` VARCHAR(6),
+      `window_start` TIMESTAMP(3) *ROWTIME*,
+      `window_end` TIMESTAMP(3) *ROWTIME*,
+      `first_price` DOUBLE,
+      `last_price` DOUBLE,
+      `min_price` DOUBLE,
+      `max_price` DOUBLE
+    )
 
-        creating temporary view for sliding window table to access within SQL
-        +I[AMZN, 2022-07-20T20:56, 2022-07-20T20:57, 82.64, 34.95, 0.05, 99.81]
-        +I[TSLA, 2022-07-20T20:56, 2022-07-20T20:57, 54.89, 93.62, 0.11, 99.91]
-        +I[MSFT, 2022-07-20T20:56, 2022-07-20T20:57, 43.12, 76.65, 0.69, 99.79]
-        +I[AAPL, 2022-07-20T20:56, 2022-07-20T20:57, 65.29, 93.06, 0.0, 99.71]
-        +I[AAPL, 2022-07-20T20:57, 2022-07-20T20:58, 9.86, 10.97, 0.25, 99.94]
-        +I[MSFT, 2022-07-20T20:57, 2022-07-20T20:58, 80.06, 64.48, 0.01, 99.86]
-        +I[AMZN, 2022-07-20T20:57, 2022-07-20T20:58, 30.36, 37.71, 0.62, 99.97]
-        +I[TSLA, 2022-07-20T20:57, 2022-07-20T20:58, 84.05, 38.65, 0.02, 100.0]
-        +I[MSFT, 2022-07-20T20:58, 2022-07-20T20:59, 48.8, 39.57, 0.2, 99.89]
-        +I[TSLA, 2022-07-20T20:58, 2022-07-20T20:59, 25.3, 82.68, 0.15, 99.93]
-        +I[AAPL, 2022-07-20T20:58, 2022-07-20T20:59, 15.78, 86.46, 0.12, 99.98]
-        +I[AMZN, 2022-07-20T20:58, 2022-07-20T20:59, 15.77, 10.04, 0.22, 99.96]
-        +I[AMZN, 2022-07-20T20:59, 2022-07-20T21:00, 12.63, 46.2, 0.06, 99.75]
-        +I[MSFT, 2022-07-20T20:59, 2022-07-20T21:00, 36.7, 8.63, 0.1, 99.95]
-        +I[AAPL, 2022-07-20T20:59, 2022-07-20T21:00, 91.41, 44.91, 0.01, 99.55]
-        +I[TSLA, 2022-07-20T20:59, 2022-07-20T21:00, 94.23, 6.09, 0.36, 99.81]
-        ```
+    creating temporary view for sliding window table to access within SQL
+    +I[AMZN, 2022-07-20T20:56, 2022-07-20T20:57, 82.64, 34.95, 0.05, 99.81]
+    +I[TSLA, 2022-07-20T20:56, 2022-07-20T20:57, 54.89, 93.62, 0.11, 99.91]
+    +I[MSFT, 2022-07-20T20:56, 2022-07-20T20:57, 43.12, 76.65, 0.69, 99.79]
+    +I[AAPL, 2022-07-20T20:56, 2022-07-20T20:57, 65.29, 93.06, 0.0, 99.71]
+    +I[AAPL, 2022-07-20T20:57, 2022-07-20T20:58, 9.86, 10.97, 0.25, 99.94]
+    +I[MSFT, 2022-07-20T20:57, 2022-07-20T20:58, 80.06, 64.48, 0.01, 99.86]
+    +I[AMZN, 2022-07-20T20:57, 2022-07-20T20:58, 30.36, 37.71, 0.62, 99.97]
+    +I[TSLA, 2022-07-20T20:57, 2022-07-20T20:58, 84.05, 38.65, 0.02, 100.0]
+    +I[MSFT, 2022-07-20T20:58, 2022-07-20T20:59, 48.8, 39.57, 0.2, 99.89]
+    +I[TSLA, 2022-07-20T20:58, 2022-07-20T20:59, 25.3, 82.68, 0.15, 99.93]
+    +I[AAPL, 2022-07-20T20:58, 2022-07-20T20:59, 15.78, 86.46, 0.12, 99.98]
+    +I[AMZN, 2022-07-20T20:58, 2022-07-20T20:59, 15.77, 10.04, 0.22, 99.96]
+    +I[AMZN, 2022-07-20T20:59, 2022-07-20T21:00, 12.63, 46.2, 0.06, 99.75]
+    +I[MSFT, 2022-07-20T20:59, 2022-07-20T21:00, 36.7, 8.63, 0.1, 99.95]
+    +I[AAPL, 2022-07-20T20:59, 2022-07-20T21:00, 91.41, 44.91, 0.01, 99.55]
+    +I[TSLA, 2022-07-20T20:59, 2022-07-20T21:00, 94.23, 6.09, 0.36, 99.81]
+    ```
