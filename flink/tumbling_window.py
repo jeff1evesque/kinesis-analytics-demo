@@ -301,7 +301,7 @@ def main():
     else:
         print(table_result1.get_job_client().get_job_status())
 
-    table_env.execute_sql('tbl-sliding-window')
+    table_env.execute_sql('tbl-tumbling-window')
 
 
 if __name__ == '__main__':
