@@ -99,7 +99,7 @@ def property_map(props, property_group_id):
             return prop['PropertyMap']
 
 
-def create_table(
+def create_table_candlestick(
     table_name,
     stream_name,
     region,
@@ -144,7 +144,7 @@ def create_table(
     )
 
 
-def create_print_table(table_name, connector='print'):
+def create_print_table_candlestick(table_name, connector='print'):
     """
 
     print connector for sink
@@ -167,7 +167,7 @@ def create_print_table(table_name, connector='print'):
     )""".format(table_name, connector)
 
 
-def candlestick_aggregation(
+def select_candlestick_aggregation(
     tbl_env,
     input_table_name,
     window_every='1',
@@ -217,22 +217,22 @@ def main():
     props = get_application_properties()
 
     consumer_property_map = property_map(props, consumer_property_group_key)
-    sliding_window_map = property_map(props, sliding_property_group_key)
+    tumbling_window_map = property_map(props, sliding_property_group_key)
 
     input_stream = consumer_property_map['input.stream.name']
     input_region = consumer_property_map['aws.region']
     stream_initpos = consumer_property_map['flink.stream.initpos']
 
-    sliding_window_over = consumer_property_map['flink.sliding_window.over']
-    sliding_window_every = consumer_property_map['flink.sliding_window.every']
-    sliding_window_on = consumer_property_map['flink.sliding_window.on']
+    tumbling_window_over = consumer_property_map['flink.sliding_window.over']
+    tumbling_window_every = consumer_property_map['flink.sliding_window.every']
+    tumbling_window_on = consumer_property_map['flink.sliding_window.on']
     timestamp_format_standard = consumer_property_map['json.timestamp_format_standard']
 
     #
     # 2. Creates a source table from a Kinesis Data Stream
     #
     table_env.execute_sql(
-        create_table(
+        create_table_candlestick(
             input_table_name,
             input_stream,
             input_region,
@@ -248,17 +248,17 @@ def main():
     #
     # 3. Creates a sink table writing to a Kinesis Data Stream
     #
-    # Note: 'create_table' invocation must replace below 'create_print_table'
+    # Note: replace 'create_print_table_candlestick' with 'create_table_candlestick'
     #       if an actual sink (i.e. kinesis stream) is desired
     #
     if is_local:
         table_env.execute_sql(
-            create_print_table(output_table_name)
+            create_print_table_candlestick(output_table_name)
         )
 
     else:
         table_env.execute_sql(
-            create_print_table(output_table_name, connector='blackhole')
+            create_print_table_candlestick(output_table_name, connector='blackhole')
         )
 
     tbl_sink = table_env.from_path(output_table_name)
@@ -266,33 +266,33 @@ def main():
     tbl_sink.print_schema()
 
     #
-    # 4. Queries from the Source Table and creates a sliding window over 10
-    #    seconds to calculate the minimum price over the window.
+    # 4. Queries from the Source Table and creates a tumbling window to
+    #    calculate candlestick.
     #
-    print('sliding_window_over: {}'.format(sliding_window_over))
-    print('sliding_window_every: {}'.format(sliding_window_every))
-    print('sliding_window_on: {}'.format(sliding_window_on))
+    print('tumbling_window_over: {}'.format(tumbling_window_over))
+    print('tumbling_window_every: {}'.format(tumbling_window_every))
+    print('tumbling_window_on: {}'.format(tumbling_window_on))
 
-    sliding_window_table = candlestick_aggregation(
+    tumbling_window_table = select_candlestick_aggregation(
         table_env,
         input_table_name,
-        sliding_window_every,
-        sliding_window_on
+        tumbling_window_every,
+        tumbling_window_on
     )
 
-    print('\nsliding_window_table')
-    sliding_window_table.print_schema()
+    print('\ntumbling_window_table')
+    tumbling_window_table.print_schema()
 
-    print('\ncreating temporary view for sliding window table to access within SQL')
-    table_env.create_temporary_view('sliding_window_table', sliding_window_table)
+    print('\ncreating temporary view for tumbling window table to access within SQL')
+    table_env.create_temporary_view('tumbling_window_table', tumbling_window_table)
 
     #
-    # 5. These sliding windows are inserted into the sink table
+    # 5. These tumbling windows are inserted into the sink table
     #
     table_result1 = table_env.execute_sql(
         'INSERT INTO {0} SELECT * FROM {1}'.format(
             output_table_name,
-            'sliding_window_table'
+            'tumbling_window_table'
         )
     )
 

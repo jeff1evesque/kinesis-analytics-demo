@@ -192,11 +192,11 @@ Sink Schema
   `min_price` DOUBLE,
   `max_price` DOUBLE
 )
-sliding_window_over: '8' HOURS
-sliding_window_every: '1' MINUTE
-sliding_window_on: utc
+tumbling_window_over: '8' HOURS
+tumbling_window_every: '1' MINUTE
+tumbling_window_on: utc
 
-sliding_window_table
+tumbling_window_table
 (
   `ticker` VARCHAR(6),
   `window_start` TIMESTAMP(3) *ROWTIME*,
