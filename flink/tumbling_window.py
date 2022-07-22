@@ -144,7 +144,7 @@ def create_table(
     )
 
 
-def create_print_table(table_name, watermark_interval='20', connector='print'):
+def create_print_table(table_name, connector='print'):
     """
 
     print connector for sink
@@ -163,15 +163,15 @@ def create_print_table(table_name, watermark_interval='20', connector='print'):
         min_price DOUBLE,
         max_price DOUBLE
     ) WITH (
-        'connector' = '{2}'
-    )""".format(table_name, watermark_interval, connector)
+        'connector' = '{1}'
+    )""".format(table_name, connector)
 
 
 def candlestick_aggregation(
     tbl_env,
     input_table_name,
-    sliding_window_every='1',
-    sliding_window_on='utc',
+    window_every='1',
+    window_on='utc',
     field_tumble='price',
     field_ticker='ticker'
 ):
@@ -182,7 +182,7 @@ def candlestick_aggregation(
 
     """
 
-    sliding_window_table = tbl_env.sql_query('''
+    return tbl_env.sql_query('''
         SELECT
             {4},
             TUMBLE_START({1}, INTERVAL {2}) AS window_start,
@@ -197,13 +197,11 @@ def candlestick_aggregation(
             {4}
     '''.format(
         input_table_name,
-        sliding_window_on,
-        sliding_window_every,
+        window_on,
+        window_every,
         field_tumble,
         field_ticker
     ))
-
-    return sliding_window_table
 
 
 def main():
