@@ -15,7 +15,6 @@ Note: https://github.com/aws-samples/pyflink-getting-started/blob/main/pyflink-e
 
 import os
 import json
-from udf.candlestick import created_period
 from datetime import datetime, timezone
 
 #
@@ -46,11 +45,6 @@ env_settings = (
 )
 table_env = StreamTableEnvironment.create(environment_settings=env_settings)
 APPLICATION_PROPERTIES_FILE_PATH = '/etc/flink/application_properties.json'
-
-#
-# register udf
-#
-table_env.create_temporary_system_function('created_period', created_period)
 
 #
 # When running PyFlink with more parallelism than available kinesis data stream
